@@ -1,0 +1,39 @@
+#login-screen, #main-chat-screen {
+  padding-top: 10px;
+}
+.headText{
+    margin-right: 10%;
+}
+.main {
+  text-align: center;
+}
+#conversation {
+  font-size: 18px;
+  margin: 0;
+  height: 300px;
+  overflow: auto;
+}
+.final {
+  color: #000;
+}
+.interim {
+  color: #f00;
+}
+#name {
+    margin: 10px;
+}
+#errors{
+    margin-top: 10px;
+}
+#send{
+    margin: 0 5px 0 5px;
+}
+#createRoomName{
+    margin-bottom: 5px;
+}
+.mrg4{
+    margin: 4px;
+}
+.createRoomBtn{
+    margin-left: 25px;
+}

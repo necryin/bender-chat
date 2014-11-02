@@ -1,0 +1,12 @@
+.joinRoomModal
+    .modal-header
+        button.close(data-dismiss="modal" aria-hidden="true" ng-click="cancel()") &times;
+        h4.modal-title Join private room
+    .modal-body Insert password for private room
+        form.form-inline(autocomplete="off")
+            .form-group.has-feedback(class="{{error ? 'has-error' : ''}}")
+                input.roomPass.form-control.input-lg(ng-click="clear()" type="password" placeholder="password")
+                span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="error")
+    .modal-footer
+        button#joinPrivateRoomBtn.btn.btn-success.btn-lg(data-dismiss="modal" ng-click="join()") Join room
+        button.btn.btn-lg.btn-default(data-dismiss="modal" ng-click="cancel()") Close

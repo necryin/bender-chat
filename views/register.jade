@@ -1,0 +1,15 @@
+extends layout
+block content
+    .main.col-md-6.col-md-offset-3
+        #login-screen
+            h1.headText Register
+            form#nameForm.form-inline(action="/register",method="post")
+                .form-group
+                    input#name.form-control.input-lg(type="text" name="username" placeholder="Your name")
+                    br
+                    input#pass.form-control.input-lg(type="password" name="password" placeholder="Your password")
+                input#join.btn.btn-primary.btn-lg(type="submit" value="Register")
+                span &nbsp;||&nbsp;
+                a.btn.btn-primary.btn-lg(href="/login") Log in
+        if (errors[0])
+            #errors.alert.alert-danger #{errors}

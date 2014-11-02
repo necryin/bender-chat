@@ -1,0 +1,8 @@
+li.people-header.list-group-item.active People online
+    span.badge {{peopleCount + 0}}
+
+li.collapse.in.list-group-item(ng-repeat="person in people")
+    span {{person.name}}
+    i.fa(class="fa-{{person.device}}")
+    i.flag(class="flag-{{person.country || 'ru'}}")
+    a.whisper.btn.btn-xs(ng-click="whisper(person.name)" href="#") whisper

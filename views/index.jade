@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  if (!user)
+      #main-chat-screen.row For logged users only
+  else
+      #main-chat-screen.row(ng-controller="ChatController as chat")
+          .col-md-3
+              ul.list-group
+                 rooms
+              ul.list-group
+                 people
+          .col-md-6
+              #conversation
+                  ul#msgs.list-unstyled
+              form#chatForm.form-inline
+                  .form-group
+                      input#msg.form-control.input-lg(type="text" placeholder="Your message" autofocus)
+                  button#send.btn.btn-success.btn-lg(type="button" ng-click="send()") Send
+
+block append scripts
+    script(src='js/socket.io.min.js')
+    script(src='js/app.js')
