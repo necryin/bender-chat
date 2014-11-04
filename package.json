@@ -1,36 +1,37 @@
 {
-  "name": "bender-chat",
-  "version": "0.0.1",
-  "description": "node.js/socket.io/angular chat app",
-  "main": "server.js",
-  "dependencies": {
-    "express": "~3.4.8",
-    "node-uuid": "~1.4.1",
-    "nodemon": "~1.0.13",
-    "socket.io": "~0.9.16",
-    "underscore": "~1.5.2",
-    "bower": "~1.2.8",
-    "jade" : "> 0.0.1",
-    "mongoose": "3.8.x",
-    "passport": "0.2.x",
-    "connect-flash": "*",
-    "passport-local": "1.0.x",
-    "passport-local-mongoose": "*"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/necryin/bender-chat.git"
-  },
-  "author": "Kirilenko George",
-  "url": "",
-  "email": "",
-  "license": "Apache License, Version 2.0",
-  "bugs": {
-    "url": "https://github.com/necryin/bender-chat/issues"
-  },
-  "homepage": "https://github.com/necryin/bender-chat"
+    "name": "bender-chat",
+    "version": "0.0.1",
+    "description": "node.js/socket.io/angular chat app",
+    "main": "server.js",
+    "dependencies": {
+        "express": "~3.4.8",
+        "node-uuid": "~1.4.1",
+        "nodemon": "~1.0.13",
+        "socket.io": "~0.9.16",
+        "underscore": "~1.5.2",
+        "bower": "~1.2.8",
+        "jade": "> 0.0.1",
+        "mongoose": "3.8.x",
+        "passport": "0.2.x",
+        "connect-flash": "*",
+        "passport-local": "1.0.x",
+        "passport-local-mongoose": "*"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "postinstall": "bower install",
+        "start": "node server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/necryin/bender-chat.git"
+    },
+    "author": "Kirilenko George",
+    "url": "",
+    "email": "",
+    "license": "Apache License, Version 2.0",
+    "bugs": {
+        "url": "https://github.com/necryin/bender-chat/issues"
+    },
+    "homepage": "https://github.com/necryin/bender-chat"
 }
