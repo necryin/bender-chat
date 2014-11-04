@@ -13,7 +13,7 @@ app.configure(function() {
     var mong_db = 'benderchat';
     app.set('mong', 'mongodb://127.0.0.1:27017/' + mong_db);
     if (process.env.OPENSHIFT_MONGODB_DB_URL) {
-        app.set('mong', process.env.OPENSHIFT_MONGODB_DB_URL + db_name);
+        app.set('mong', process.env.OPENSHIFT_MONGODB_DB_URL + mong_db);
     }
 
     app.use(express.bodyParser());
