@@ -54,7 +54,8 @@ mongoose.connect(app.get('mong'), function (err, res) {
     }
 });
 
-require('./routes')(app);
+require('./routes')(app, passport, flash);
+require('./chat')(server);
 
 server.listen(app.get('port'), app.get('ipaddr'), function(){
     console.log('Express server listening on  IP: ' + app.get('ipaddr') + ' and port ' + app.get('port'));

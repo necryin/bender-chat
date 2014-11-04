@@ -1,8 +1,6 @@
-var passport = require('passport'),
-    flash = require('connect-flash'),
-    Account = require('./models/account');
+var Account = require('./models/account');
 
-module.exports = function (app) {
+module.exports = function (app, passport, flash) {
 
     app.get('/', loggedIn, function (req, res) {
         res.render('index', { user : req.user, menu: 'Chat' });

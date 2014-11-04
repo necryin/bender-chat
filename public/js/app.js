@@ -1,5 +1,5 @@
 (function() {
-    var CHAT = "http://benderchat-necryin.rhcloud.com:8000";
+    var CHAT = window.location.host;
     var app = angular.module('benderChat', ['ui.bootstrap']);
 
     app.factory('socket', function ($rootScope) {
