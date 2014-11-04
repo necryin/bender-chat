@@ -2,7 +2,7 @@
     "name": "bender-chat",
     "version": "0.0.1",
     "description": "node.js/socket.io/angular chat app",
-    "main": "chat.js",
+    "main": "server.js",
     "dependencies": {
         "express": "~3.4.8",
         "node-uuid": "~1.4.1",
@@ -20,7 +20,7 @@
     "devDependencies": {},
     "scripts": {
         "postinstall": "HOME=$HOME/app-root/runtime bower install",
-        "start": "node chat.js"
+        "start": "node server.js && node chat.js"
     },
     "repository": {
         "type": "git",
