@@ -6,7 +6,8 @@
         "typeahead.js": "latest",
         "font-awesome": "latest",
         "angular": "latest",
-        "angular-bootstrap": "latest"
+        "angular-bootstrap": "latest",
+        "bootstrap": "latest"
     },
     "directory": "components",
     "homepage": "https://github.com/necryin/bender-chat",
