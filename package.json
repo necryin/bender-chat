@@ -2,7 +2,7 @@
     "name": "bender-chat",
     "version": "0.0.1",
     "description": "node.js/socket.io/angular chat app",
-    "main": "server.js",
+    "main": "chat.js",
     "dependencies": {
         "express": "~3.4.8",
         "node-uuid": "~1.4.1",
