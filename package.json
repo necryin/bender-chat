@@ -20,7 +20,7 @@
     "devDependencies": {},
     "scripts": {
         "postinstall": "HOME=$HOME/app-root/runtime bower install",
-        "start": "node server.js && node chat.js"
+        "start": "node chat.js"
     },
     "repository": {
         "type": "git",
