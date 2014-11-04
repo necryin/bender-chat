@@ -1,20 +1,21 @@
 {
-  "name": "bender-chat",
-  "version": "0.0.1",
-  "dependencies": {
-    "bootstrap": "latest",
-    "jquery": "latest",
-    "typeahead.js": "latest",
-    "font-awesome": "latest"
-  },
-  "directory": "components",
-  "homepage": "https://github.com/necryin/bender-chat",
-  "authors": [
-    "Kirilenko George"
-  ],
-  "main": "server.js",
-  "moduleType": [
-    "node"
-  ],
-  "license": "Apache License, Version 2.0"
+    "name": "bender-chat",
+    "version": "0.0.1",
+    "dependencies": {
+        "jquery": "latest",
+        "typeahead.js": "latest",
+        "font-awesome": "latest",
+        "angular": "latest",
+        "angular-bootstrap": "latest"
+    },
+    "directory": "components",
+    "homepage": "https://github.com/necryin/bender-chat",
+    "authors": [
+        "Kirilenko George"
+    ],
+    "main": "server.js",
+    "moduleType": [
+        "node"
+    ],
+    "license": "Apache License, Version 2.0"
 }

@@ -21,7 +21,7 @@ app.configure(function() {
     app.use(express.static(__dirname + '/public'));
 
     app.use(express.cookieParser());
-    app.use(express.session({ secret: 'bender chat has you twice' }));
+    app.use(express.cookieSession({ secret: 'bender chat has you twice' }));
 
     app.use(passport.initialize());
     app.use(passport.session({ secret: 'bender chat has you' }));
