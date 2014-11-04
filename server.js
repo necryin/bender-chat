@@ -8,7 +8,7 @@ var express = require('express'),
 
 app.configure(function() {
     app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 80);
-    app.set('ipaddr', process.env.OPENSHIFT_NODEJS_PORT || "127.0.0.1");
+    app.set('ipaddr', process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1");
 
     var mong_db = 'benderchat';
     app.set('mong', 'mongodb://127.0.0.1:27017/' + mong_db);
