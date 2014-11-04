@@ -1,5 +1,5 @@
 (function() {
-    var CHAT = "127.0.0.1:3000";
+    var CHAT = "http://benderchat-necryin.rhcloud.com:15500";
     var app = angular.module('benderChat', ['ui.bootstrap']);
 
     app.factory('socket', function ($rootScope) {
