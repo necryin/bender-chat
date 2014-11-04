@@ -1,6 +1,10 @@
 (function() {
-    var CHAT = window.location.host;
     var app = angular.module('benderChat', ['ui.bootstrap']);
+
+    var CHAT = window.location.host;
+    if(CHAT.indexOf('rhcloud.com') !== -1) {
+        CHAT += ":8000";
+    }
 
     app.factory('socket', function ($rootScope) {
         var socket = io.connect(CHAT);
