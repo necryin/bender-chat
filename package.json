@@ -19,7 +19,7 @@
     },
     "devDependencies": {},
     "scripts": {
-        "postinstall": "bower install",
+        "build-js": "HOME=$HOME/app-root/runtime bower install && r.js -o build-config.js",
         "start": "node server.js"
     },
     "repository": {
