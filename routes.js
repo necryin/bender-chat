@@ -15,8 +15,11 @@ module.exports = function (app, passport, flash) {
             if (err) {
                 req.flash('error', err.message);
                 return res.redirect('/register');
+            } else {
+                passport.authenticate('local')(req, res, function () {
+                    res.redirect('/');
+                })
             }
-            res.redirect('/');
         });
     });
 

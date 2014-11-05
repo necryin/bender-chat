@@ -203,6 +203,9 @@
             restrict: "E",
             templateUrl: "partials/people-part",
             controller: function($scope) {
+                $scope.isOwner = function(name) {
+                    return name == user.username;
+                };
                 $scope.whisper = function(name) {
                     $("#msg").val("w:" + name + ":").focus();
                 };

@@ -3,6 +3,6 @@ li.people-header.list-group-item.active People online
 
 li.collapse.in.list-group-item(ng-repeat="person in people")
     span {{person.name}}
-    i.fa(class="fa-{{person.device}}")
+    i.device-icon.fa(class="fa-{{person.device}}")
     i.flag(class="flag-{{person.country || 'ru'}}")
-    a.whisper.btn.btn-xs(ng-click="whisper(person.name)" href="#") whisper
+    a.whisper.btn.btn-xs(ng-click="whisper(person.name)" ng-show="!isOwner(person.name)" href="#") whisper

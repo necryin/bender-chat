@@ -16,7 +16,7 @@ block content
               form#chatForm.form-inline
                   .form-group
                       input#msg.form-control.input-lg(type="text" placeholder="Your message" autofocus)
-                  button#send.btn.btn-success.btn-lg(type="button" ng-click="send()") Send
+                  input#send.btn.btn-success.btn-lg(type="submit" ng-click="send()" value="Send")
 
 block append scripts
     script(src='js/socket.io.min.js')
