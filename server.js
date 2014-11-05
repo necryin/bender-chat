@@ -4,7 +4,24 @@ var express = require('express'),
     mongoose = require('mongoose'),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
-    flash = require('connect-flash');
+    flash = require('connect-flash'),
+    redis = require("redis");
+
+if (process.env.rediscloud_41eef) {
+    var redis_config = JSON.parse(process.env.rediscloud_41eef);
+    var client = redis.createClient(redis_config['port'], redis_config['hostname']);
+    client.auth(redis_config['password']);
+} else {
+    var client = redis.createClient();
+}
+
+client.on("error", function (err) {
+    console.log("Error " + err);
+});
+
+client.hset("people", "name", "admin", redis.print);
+client.hset("people", "name", "vasia", redis.print);
+client.hget("people", "name", redis.print);
 
 app.configure(function() {
     app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 80);

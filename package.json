@@ -4,6 +4,7 @@
     "description": "node.js/socket.io/angular chat app",
     "main": "server.js",
     "dependencies": {
+        "redis": "*",
         "express": "~3.4.8",
         "node-uuid": "~1.4.1",
         "nodemon": "~1.0.13",
