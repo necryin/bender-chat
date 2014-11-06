@@ -202,8 +202,8 @@ module.exports = function (server) {
 
                 if (found && socket.id !== whisperId) {
                     var whisperMsg = whisperStr[2];
-                    socket.emit("whisper", {name: "You"}, whisperMsg);
-                    io.sockets.socket(whisperId).emit("whisper", people[socket.id], whisperMsg);
+                    socket.emit("whisper", {name: "You", msg: whisperMsg});
+                    io.sockets.socket(whisperId).emit("whisper", {name: people[socket.id].name, msg: whisperMsg});
                 } else {
                     socket.emit("update", "Can't find " + whisperTo);
                 }

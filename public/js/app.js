@@ -111,8 +111,13 @@
             $("#msgs").append("<li class='bg-danger'>" + msg + "</li>");
         });
 
+        socket.on('whisper', function (data) {
+            var s = data.name === "You" ? "whisper" : "whispers";
+            $("#msgs").append("<li><strong><span class='text-muted'>" + data.name + "</span></strong> " + s + ": " +data.msg + "</li>");
+        });
+
         socket.on("disconnect", function () {
-            $("#send").attr("disabled", "disabled");
+//            $("#send").attr("disabled", "disabled");
         });
     });
 
@@ -172,6 +177,8 @@
                                     var $modalElem = $(".joinRoomModal");
                                     var password = $($modalElem).find(".roomPass").val();
                                     if (password) {
+                                        console.log(roomid);
+                                        console.log(password);
                                         socket.emit("join:room", {id: roomid, password: password});
                                         $modalInstance.dismiss('cancel');
                                     } else {
@@ -190,7 +197,7 @@
                             controllerAs: "joinRoomModal"
                         });
                     } else {
-                        socket.emit("join:room", roomid);
+                        socket.emit("join:room", {id: roomid, password: null});
                     }
                 };
             },
