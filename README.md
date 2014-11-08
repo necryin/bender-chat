@@ -1,11 +1,13 @@
 Bender chat
 ===========
 
-# Chat app written in node.js with best technologies
+# Chat app written on node.js and best technologies
+
+## work example: http://benderchat-necryin.rhcloud.com/ 
 
 ## Libraries used
 
-## Server
+### Server
 <ul>
   <li>node.js as engine</li>
   <li>socket.io as socket provider</li>
@@ -16,7 +18,7 @@ Bender chat
   <li>passport as authenticate system</li>
 </ul>
 
-## Client  
+### Client  
 <ul>
   <li>angular.js</li>
   <li>bootstrap</li>
@@ -24,4 +26,4 @@ Bender chat
   <li>jquery</li>
 </ul>
 
-<strong>Kiss my metal ass!</strong>
+## Kiss my metal ass!
