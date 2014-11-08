@@ -5,7 +5,8 @@ li.rooms-header.list-group-item.active List of rooms
 li.collapse.in.list-group-item(ng-repeat="room in rooms")
     span {{room.name}}
         i.mrg4.fa.fa-lock(ng-show="room.private")
-        button.btn.btn-default.btn-xs(ng-click="joinRoom(room.id, room.private)" ng-show="notInRoom(room.people)") Join
-        button.btn.btn-default.btn-xs(ng-click="deleteRoom(room.id)" ng-show="isBoss(room.owner)") Remove
-        button.btn.btn-default.btn-xs(ng-click="leaveRoom(room.id)" ng-show="!nir && !boss") Leave
-        i.mrg4.fa.fa-chevron-left(ng-show="!nir") &nbsp;You here
+        button.btn.btn-default.btn-xs(ng-click="joinRoom(room.name, room.private)" ng-show="notInRoom(room.people)") Join
+        //button.btn.btn-default.btn-xs(ng-click="deleteRoom(room.name)" ng-show="isBoss(room.owner)") Remove
+        //button.btn.btn-default.btn-xs(ng-click="leaveRoom(room.name)" ng-show="showLeave(room.name)") Leave
+        i.mrg4.fa.fa-chevron-left(ng-show="!nir")
+

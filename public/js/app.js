@@ -30,13 +30,6 @@
         };
     });
 
-    var $conv = $("#conversation");
-    $conv.on("DOMSubtreeModified", function () {
-        $conv.animate({
-            scrollTop: $conv[0].scrollHeight
-        });
-    });
-
     app.factory('device',  function ($window) {
         if ($window.navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
             return "mobile";
@@ -44,28 +37,44 @@
         return "desktop";
     });
 
-    app.controller('ChatController', function($scope, socket, device) {
-        if (user === undefined) alert('FATAL ERROR!!!');
+    app.controller('tabsCtrl', function ($scope, $rootScope, $interval, socket) {
+        $scope.leaveRoom = function (roomName) {
+            socket.emit("leave:room", roomName);
+            delete $scope.userRooms[roomName];
+        };
+        $scope.clicked = function (roomName) {
+            $interval.cancel($rootScope.tabIntervals[roomName]);
+            $("tab-heading[data-id='"+roomName+"']").parents("a").css("background-color", "#fff");
+        };
 
-        $scope.rooms = null;
+    });
+
+    app.controller('ChatController', function($scope, $rootScope, $interval, socket, device) {
+//        if (typeof user === 'undefined') alert('FATAL ERROR!!!');
+
+        $scope.DEFAULT_ROOM = "default";
+        $scope.rooms = {};
         $scope.roomsCount = 0;
         $scope.user = user;
-        $scope.people = null;
+        $scope.userRooms = {};
+        $scope.people = {};
         $scope.peopleCount = 0;
+
+        $rootScope.tabIntervals = {};
 
         socket.emit("join:server", {username: $scope.user.username, device: device});
 
         $scope.send = function () {
+            var roomName =  $(".tab-pane.active > div").attr('data-id');
             var msg = $("#msg");
             if (msg.val() !== "") {
-                socket.emit("send:msg", msg.val());
+                socket.emit("send:msg", {msg: msg.val(), room: roomName});
                 msg.val("");
             }
         };
 
         // sockets handlers
-        socket.on("joined:server", function (id) {
-            $scope.user.chatID = id;
+        socket.on("joined:server", function () {
 
             if (navigator.geolocation) { //get lat lon of user
                 navigator.geolocation.getCurrentPosition(positionSuccess, positionError, { enableHighAccuracy: true });
@@ -91,29 +100,138 @@
             }
         });
 
+        whisper = function(name) {
+            if (name !== user.username) {
+                $("#msg").val("w:" + name + ":").focus();
+            }
+        };
+
         socket.on('get:msg', function (data) {
-            $("#msgs").append("<li class='bg-warning'><strong><span class='text-success'>" + data.name + "</span></strong>: " + data.message + "</li>");
+            var $conv = $(".conversation[data-id='"+data.room+"']");
+            var $tab = $("tab-heading[data-id='"+data.room+"']").parents("a");
+            var $to = $conv.find(".msgs");
+
+            //TODO clear $interval
+            if (!$tab.parents("li").hasClass('active')) {
+                $tab.css("background-color", "#449d44");
+                $rootScope.tabIntervals[data.room] = $interval(function(){
+                    $tab.fadeTo(300, 0.5).fadeTo(300, 1.0);
+                }, 1000, 0, false);
+            }
+
+            $conv.animate({
+                scrollTop: $conv[0].scrollHeight
+            });
+
+            console.log($to);
+            console.log(data.message);
+            $to.append("<li class='bg-warning'><strong><span class='component' onclick='whisper(\"" + data.name  + "\");' class='text-success'>" + data.name + "</span></strong>: " + data.message + "</li>");
+        });
+
+        socket.on('get:history', function (data) {
+            var $to = $(".conversation[data-id='"+data.room+"'] .msgs");
+            console.log($to);
+            console.log(data.history);
+            $.each(data.history, function( index, value ) {
+                $to.append("<li>" + value + "</li>");
+            });
         });
 
         socket.on('get:rooms', function (data) {
-            $scope.rooms = data;
+            console.log("get:rooms");
             console.log(data);
+            $scope.rooms = data;
+            for (room in data) {
+                if (data[room].people.hasOwnProperty(user.username)) {
+                    $scope.userRooms[room] = data[room];
+                }
+            }
             $scope.roomsCount = Object.keys(data).length;
         });
 
         socket.on('get:people', function (data) {
             $scope.people = data;
+            console.log("get:people");
             console.log(data);
             $scope.peopleCount = Object.keys(data).length;
         });
 
+        socket.on('get:person', function (data) {
+            console.log('get:person');
+            console.log(data);
+            if (!$scope.people.hasOwnProperty(data.name)) {
+                $scope.peopleCount += 1;
+            }
+            $scope.people[data.name] = data;
+
+            console.log($scope.people);
+        });
+
+        socket.on('delete:person', function (data) {
+            console.log('delete:person');
+            console.log(data);
+            if ($scope.people.hasOwnProperty(data.name)) {
+                $scope.peopleCount -= 1;
+            }
+            delete $scope.people[data.name];
+
+            console.log($scope.people);
+        });
+
+        socket.on('delete:room', function (roomName) {
+            console.log('delete:room');
+            console.log(roomName);
+            if ($scope.rooms.hasOwnProperty(roomName)) {
+                $scope.roomCount -= 1;
+            }
+            delete $scope.rooms[roomName];
+
+            console.log($scope.rooms);
+        });
+
+        socket.on('get:room', function (data) {
+            console.log('get:room');
+            console.log(data);
+            if (!$scope.rooms.hasOwnProperty(data.name)) {
+                $scope.roomCount += 1;
+            }
+            $scope.rooms[data.name] = data;
+            if(data.people.hasOwnProperty(user.username)) {
+                $scope.userRooms[data.name] = data;
+            }
+            console.log($scope.rooms);
+        });
+
+        var inRun = false;
         socket.on("update", function (msg) {
-            $("#msgs").append("<li class='bg-danger'>" + msg + "</li>");
+            var $system = $("#system");
+            $system.append("<li class='list-unstyled'>" + msg + "</li>");
+
+            $system.animate({
+                scrollTop: $system[0].scrollHeight
+            });
+
+            if (inRun) {
+                $interval.cancel(inRun);
+            }
+            inRun = $interval(function(){
+                $system.fadeTo(300, 0.5).fadeTo(300, 1.0);
+            }, 700, 3);
+
         });
 
         socket.on('whisper', function (data) {
-            var s = data.name === "You" ? "whisper" : "whispers";
-            $("#msgs").append("<li><strong><span class='text-muted'>" + data.name + "</span></strong> " + s + ": " +data.msg + "</li>");
+            var handler = "", s = "";
+            if (data.name == user.username) {
+                data.name = "You";
+                s = "whisper to <strong><span class='component' onclick='whisper(\"" +
+                    data.to  + "\");'>" + data.to + "</span></strong>: ";
+            } else {
+                s ="whispers: ";
+                handler = "class='component' onclick='whisper(\"" + data.name  + "\");'";
+            }
+            $("#whispers").append("<li class='text-whisper'><strong><span " + handler + ">" +
+                data.name + "</span></strong> " + s + data.msg + "</li>");
         });
 
         socket.on("disconnect", function () {
@@ -156,13 +274,17 @@
                 };
 
                 $scope.notInRoom = function(people) {
-                    $scope.nir = people.indexOf(user.chatID) === -1;
+                    $scope.nir = (!people.hasOwnProperty(user.username));
                     return $scope.nir;
                 };
 
                 $scope.isBoss = function(owner) {
-                    $scope.boss = owner == user.chatID;
-                    return  $scope.boss;
+                    $scope.boss = owner == user.username;
+                    return $scope.boss;
+                };
+
+                $scope.showLeave = function(roomName) {
+                    return $scope.nir &&  $scope.boss && roomName !== "default";
                 };
 
                 $scope.joinRoom = function(roomid, isPrivate, size) {
@@ -177,9 +299,7 @@
                                     var $modalElem = $(".joinRoomModal");
                                     var password = $($modalElem).find(".roomPass").val();
                                     if (password) {
-                                        console.log(roomid);
-                                        console.log(password);
-                                        socket.emit("join:room", {id: roomid, password: password});
+                                        socket.emit("join:room", {name: roomid, password: password});
                                         $modalInstance.dismiss('cancel');
                                     } else {
                                         $scope.error = true;
@@ -197,7 +317,7 @@
                             controllerAs: "joinRoomModal"
                         });
                     } else {
-                        socket.emit("join:room", {id: roomid, password: null});
+                        socket.emit("join:room", {name: roomid, password: null});
                     }
                 };
             },
@@ -205,7 +325,7 @@
         };
     });
 
-    app.directive("people", function(socket) {
+    app.directive("people", function() {
         return {
             restrict: "E",
             templateUrl: "partials/people-part",

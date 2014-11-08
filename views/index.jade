@@ -1,23 +1,36 @@
 extends layout
 
 block content
-  if (!user)
-      #main-chat-screen.row For logged users only
-  else
-      #main-chat-screen.row(ng-controller="ChatController as chat")
-          .col-md-3
-              ul.list-group
-                 rooms
-              ul.list-group
-                 people
-          .col-md-6
-              #conversation
-                  ul#msgs.list-unstyled
-              form#chatForm.form-inline
-                  .form-group
-                      input#msg.form-control.input-lg(type="text" placeholder="Your message" autofocus)
-                  input#send.btn.btn-success.btn-lg(type="submit" ng-click="send()" value="Send")
+    if (!user)
+        #main-chat-screen.row For logged users only
+    else
+        #main-chat-screen.row(ng-controller="ChatController as chat")
+            .col-md-3
+                ul.list-group
+                    rooms
+                ul.list-group
+                    people
+            .col-md-6
+                #tabs(ng-controller="tabsCtrl as tabs")
+                    //input(ng-model="searchText")
+                    tabset
 
+                        //tab(ng-repeat="room in (userRooms = (rooms | filter: search))") {{room.name}}
+                        tab(ng-repeat="room in userRooms")
+                            .conversation(data-id="{{room.name}}")
+                                ul.msgs.list-unstyled
+                            tab-heading(data-id="{{room.name}}" ng-click="clicked(room.name)") {{room.name}}
+                                a(ng-click="leaveRoom(room.name)" href='#')
+                                    i.glyphicon.glyphicon-remove(ng-if="room.name != DEFAULT_ROOM")
+
+                        //tab(ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled") {{tab.content}}
+                form#chatForm.form-inline
+                    .form-group
+                        input#msg.form-control.input-lg(type="text" placeholder="Your message" autofocus)
+                    input#send.btn.btn-success.btn-lg(type="submit" ng-click="send()" value="Send")
+                #system.bg-danger
+            .col-md-3
+                ul#whispers.list-unstyled
 block append scripts
-    script(src='js/socket.io.min.js')
+    script(src='js/socket.io.js')
     script(src='js/app.js')

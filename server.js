@@ -9,19 +9,15 @@ var express = require('express'),
 
 if (process.env.rediscloud_41eef) {
     var redis_config = JSON.parse(process.env.rediscloud_41eef);
-    var client = redis.createClient(redis_config['port'], redis_config['hostname']);
-    client.auth(redis_config['password']);
+    var redisClient = redis.createClient(redis_config['port'], redis_config['hostname']);
+    redisClient.auth(redis_config['password']);
 } else {
-    var client = redis.createClient();
+    var redisClient = redis.createClient();
 }
 
-client.on("error", function (err) {
-    console.log("Error " + err);
+redisClient.on("error", function (err) {
+    console.log("Redis error: " + err);
 });
-
-client.hset("people", "name", "admin", redis.print);
-client.hset("people", "name", "vasia", redis.print);
-client.hget("people", "name", redis.print);
 
 app.configure(function() {
     app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 80);
@@ -67,14 +63,13 @@ mongoose.connect(app.get('mong'), function (err, res) {
     if (err) {
         console.log ('ERROR connecting to: ' + app.get('mong') + '. ' + err);
     } else {
-        console.log ('Succeeded connected to: ' + app.get('mong'));
+        console.log ('Success connect to: ' + app.get('mong'));
     }
 });
 
 require('./routes')(app, passport, flash);
-require('./chat')(server);
+require('./chat')(server, redisClient);
 
 server.listen(app.get('port'), app.get('ipaddr'), function(){
     console.log('Express server listening on  IP: ' + app.get('ipaddr') + ' and port ' + app.get('port'));
 });
-

@@ -7,7 +7,7 @@
 .main {
   text-align: center;
 }
-#conversation {
+.conversation {
   font-size: 18px;
   margin: 0;
   height: 300px;
@@ -39,4 +39,26 @@
 }
 .device-icon{
     margin: 0 7px 0 7px;
+}
+#system {
+    font-size: 14px;
+    margin: 5px 0 0 0;
+    padding: 10px;
+    height: 100px;
+    overflow: auto;
+}
+#msg {
+    width: 573px;
+}
+.bg-green {
+    background-color: #DFF0D8;
+}
+.text-whisper{
+    color: #7f04b8;
+}
+.component {
+    cursor: pointer;
+}
+.nav-tabs > li {
+    cursor: pointer;
 }
