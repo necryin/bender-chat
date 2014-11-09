@@ -223,7 +223,7 @@ module.exports = function (server, client) {
             var password = data.password;
 
             if (!g_rooms.hasOwnProperty(name)) {
-                if (name.length <= 0) {
+                if (name.trim().length <= 0) {
                     socket.emit("update", "Invalid room name");
                     return;
                 }

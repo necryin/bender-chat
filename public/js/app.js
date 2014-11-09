@@ -185,8 +185,10 @@
         socket.on('delete:room', function (roomName) {
             console.log('delete:room');
             console.log(roomName);
+            console.log($scope.rooms);
+            console.log($scope.rooms.hasOwnProperty(roomName));
             if ($scope.rooms.hasOwnProperty(roomName)) {
-                $scope.roomCount -= 1;
+                $scope.roomsCount -= 1;
             }
             delete $scope.rooms[roomName];
 
@@ -196,8 +198,9 @@
         socket.on('get:room', function (data) {
             console.log('get:room');
             console.log(data);
+            console.log(!$scope.rooms.hasOwnProperty(data.name));
             if (!$scope.rooms.hasOwnProperty(data.name)) {
-                $scope.roomCount += 1;
+                $scope.roomsCount += 1;
             }
             $scope.rooms[data.name] = data;
             if(data.people.hasOwnProperty(user.username)) {
