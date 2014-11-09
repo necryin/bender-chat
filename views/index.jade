@@ -6,16 +6,12 @@ block content
     else
         #main-chat-screen.row(ng-controller="ChatController as chat")
             .col-md-3
-                ul.list-group
-                    rooms
-                ul.list-group
-                    people
+                rooms
+                people
+
             .col-md-6
                 #tabs(ng-controller="tabsCtrl as tabs")
-                    //input(ng-model="searchText")
                     tabset
-
-                        //tab(ng-repeat="room in (userRooms = (rooms | filter: search))") {{room.name}}
                         tab(ng-repeat="room in userRooms")
                             .conversation(data-id="{{room.name}}")
                                 ul.msgs.list-unstyled
@@ -23,11 +19,10 @@ block content
                                 a(ng-click="leaveRoom(room.name)" href='#')
                                     i.glyphicon.glyphicon-remove(ng-if="room.name != DEFAULT_ROOM")
 
-                        //tab(ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled") {{tab.content}}
-                form#chatForm.form-inline
-                    .form-group
+                form#chatForm.form-inline.row
+                    .form-group.col-xs-8.col-sm-8
                         input#msg.form-control.input-lg(type="text" placeholder="Your message" autofocus)
-                    input#send.btn.btn-success.btn-lg(type="submit" ng-click="send()" value="Send")
+                    input#send.btn.btn-success.btn-lg.col-xs-3.col-sm-3(type="submit" ng-click="send()" value="Send")
                 #system.bg-danger
             .col-md-3
                 ul#whispers.list-unstyled

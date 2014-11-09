@@ -11,8 +11,8 @@ html(lang='en' ng-app='benderChat')
         nav.navbar.navbar-default(role="navigation")
             .container-fluid
                 .navbar-header
-                    a.navbar-brand(href="/") Bender Chat
-                div#bs-example-navbar-collapse-1.collapse.navbar-collapse
+                    a.navbar-brand(href="/") Bender chat
+                #nav.navbar-collapse.collapsebar(aria-expanded="false")
                     ul.nav.navbar-nav
                         if(user)
                             li(class=(menu === 'Chat' ? 'active' : ''))

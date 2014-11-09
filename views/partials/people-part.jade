@@ -1,9 +1,11 @@
-li.people-header.list-group-item.active People online
-    span.badge {{peopleCount + 0}}
-    //input(ng-model="searchText" style="color: black;")
-li.bg-green.collapse.in.list-group-item(ng-repeat="person in people | filter:{'name':  'rrr'}")
-    span {{person.name}}
-    i.device-icon.fa(class="fa-{{person.device}}")
-    i.flag(class="flag-{{person.country || 'ru'}}")
-    a.whisper.btn.btn-xs(ng-click="whisper(person.name)" ng-show="!isOwner(person.name)" href="#") whisper
-    span {{person.status}}
+accordion
+    accordion-group
+        ul.list-group
+            li.bg-green.list-group-item(ng-repeat="person in people")
+                span {{person.name}}
+                i.device-icon.fa(class="fa-{{person.device}}")
+                i.flag(class="flag-{{person.country || 'ru'}}")
+                a.whisper.btn.btn-xs(ng-click="whisper(person.name)" ng-show="!isOwner(person.name)" href="#") whisper
+                span {{person.status}}
+        accordion-heading People online
+            span.badge.pull-right {{peopleCount + 0}}

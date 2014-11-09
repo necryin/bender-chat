@@ -237,7 +237,7 @@
                 s ="whispers: ";
                 handler = "class='component' onclick='whisper(\"" + data.name  + "\");'";
             }
-            $("#whispers").append("<li class='text-whisper'><strong><span " + handler + ">" +
+            $("#whispers").append("<li class='text-whisper msg-text'><strong><span " + handler + ">" +
                 data.name + "</span></strong> " + s + data.msg + "</li>");
         });
 
