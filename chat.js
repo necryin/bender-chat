@@ -345,7 +345,7 @@ module.exports = function (server, client) {
                     delete g_rooms[room.name].people[socket.name]; // delete from room
                     delete g_people[socket.name].owns[room.name]; // clear user owns
                     delete g_people[socket.name].rooms[room.name]; //clear user rooms
-                    g_rooms[name].owner = Object.keys(g_rooms[room.name].people)[0]; // new owner -> take first
+                    g_rooms[room.name].owner = Object.keys(g_rooms[room.name].people)[0]; // new owner -> take first
                     io.sockets.connected[g_people[g_rooms[room.name].owner].socketID].emit("get:person",
                         g_people[g_rooms[room.name].owner]); // update new owner's view
                     msg = "Owner (" + socket.name + ") leave room. New owner is " + g_rooms[room.name].owner;
