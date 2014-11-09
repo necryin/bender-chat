@@ -1,7 +1,8 @@
 module.exports = function (server, client) {
 
     var io = require("socket.io").listen(server),
-        Room = require('./room.js');
+        Room = require('./room.js'),
+        escape = require('escape-html');
 
     client.flushdb();
     var g_people = {};
@@ -161,7 +162,7 @@ module.exports = function (server, client) {
                 return;
             }
 
-            var msg = data.msg;
+            var msg = escape(data.msg);
             var roomName = data.room;
 
             var re = /^[w]:.*:/;

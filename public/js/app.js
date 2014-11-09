@@ -121,9 +121,11 @@
                 }, 1000, 0, false);
             }
 
-            $conv.animate({
-                scrollTop: $conv[0].scrollHeight
-            });
+            try { // silence!!!
+                $conv.animate({
+                    scrollTop: $conv[0].scrollHeight
+                });
+            } catch (e) {}
 
             console.log($to);
             console.log(data.message);

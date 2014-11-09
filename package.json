@@ -14,7 +14,8 @@
         "passport": "0.2.x",
         "connect-flash": "*",
         "passport-local": "*",
-        "passport-local-mongoose": "*"
+        "passport-local-mongoose": "*",
+        "escape-html": "*"
     },
     "devDependencies": {},
     "scripts": {
