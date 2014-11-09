@@ -237,7 +237,8 @@
         });
 
         socket.on("disconnect", function () {
-//            $("#send").attr("disabled", "disabled");
+            $("#main-chat-screen").html("<h1 style='padding-left: 15%;'>SERVER IS GO AWAY. " +
+                "<a href='/'>CLICK HERE</a> TO RELOAD OR PRESS F5<br>(if you see white screen - try later)</h1>");
         });
     });
 
