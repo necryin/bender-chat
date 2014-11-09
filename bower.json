@@ -7,7 +7,8 @@
         "font-awesome": "latest",
         "angular": "latest",
         "angular-bootstrap": "latest",
-        "bootstrap": "latest"
+        "bootstrap": "latest",
+        "Autolinker.js": "latest"
     },
     "directory": "components",
     "homepage": "https://github.com/necryin/bender-chat",

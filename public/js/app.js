@@ -127,7 +127,9 @@
 
             console.log($to);
             console.log(data.message);
-            $to.append("<li class='bg-warning'><strong><span class='component' onclick='whisper(\"" + data.name  + "\");' class='text-success'>" + data.name + "</span></strong>: " + data.message + "</li>");
+            $to.append("<li class='bg-warning'><strong><span class='component' onclick='whisper(\"" +
+                data.name  + "\");' class='text-success'>" + data.name + "</span></strong>: " +
+                Autolinker.link(data.message) + "</li>");
         });
 
         socket.on('get:history', function (data) {

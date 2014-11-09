@@ -61,4 +61,10 @@
 }
 .nav-tabs > li {
     cursor: pointer;
+    min-width: 80px;
+}
+tab-heading > a {
+    position: absolute;
+    right: 5px;
+    top: 2px;
 }
