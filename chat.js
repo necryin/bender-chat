@@ -117,6 +117,7 @@ module.exports = function (server, client) {
             socket.emit("update", "You have connected to the server.");
             //join in saved rooms
             var msg = socket.name + " has connected.";
+            socket.emit("get:rooms", g_rooms);
             for (room in g_people[name].rooms) {
                 console.log("room");
                 console.log(room);

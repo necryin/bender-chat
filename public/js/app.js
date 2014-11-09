@@ -127,7 +127,7 @@
 
             console.log($to);
             console.log(data.message);
-            $to.append("<li class='bg-warning'><strong><span class='component' onclick='whisper(\"" +
+            $to.append("<li class='msg-text bg-warning'><strong><span class='component' onclick='whisper(\"" +
                 data.name  + "\");' class='text-success'>" + data.name + "</span></strong>: " +
                 Autolinker.link(data.message) + "</li>");
         });
@@ -137,7 +137,7 @@
             console.log($to);
             console.log(data.history);
             $.each(data.history, function( index, value ) {
-                $to.append("<li>" + value + "</li>");
+                $to.append("<li class='msg-text bg-warning'>" + value + "</li>");
             });
         });
 

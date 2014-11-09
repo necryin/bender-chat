@@ -68,3 +68,6 @@ tab-heading > a {
     right: 5px;
     top: 2px;
 }
+.msg-text {
+    word-wrap: break-word;
+}
