@@ -62,6 +62,8 @@
 
         $rootScope.tabIntervals = {};
 
+        socket.emit("disconnect");
+
         socket.emit("join:server", {username: $scope.user.username, device: device});
 
         $scope.send = function () {

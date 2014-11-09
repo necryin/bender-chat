@@ -148,7 +148,7 @@ module.exports = function (server, client) {
 
         socket.on("typing", function (data) {
             if (g_people.hasOwnProperty(socket.name)) {
-                io.in(socket.room).emit("isTyping", {isTyping: data, person: g_people[socket.name].name});
+                io.in(socket.room).emit("isTyping", {isTyping: data, person: socket.name});
             }
         });
 
@@ -190,7 +190,7 @@ module.exports = function (server, client) {
                 if (Object.keys(g_rooms[roomName].people).length > HISTORY_LENGTH) {
                     g_chatHistory[roomName].splice(0, 1);
                 } else {
-                    g_chatHistory[roomName].push(g_people[socket.name].name + ": " + msg);
+                    g_chatHistory[roomName].push(socket.name + ": " + msg);
                 }
             }
         });
@@ -242,7 +242,7 @@ module.exports = function (server, client) {
                 socket.emit("update", "Room " + room.name + " created.");
                 g_chatHistory[room.name] = [];
             } else {
-                socket.emit("update", "Room with (" + room.name + ") name is already exist");
+                socket.emit("update", "Room with (" + name + ") name is already exist");
             }
         });
 
@@ -266,7 +266,7 @@ module.exports = function (server, client) {
                     clients[i].leave(room.name);
                     if (typeof g_people[clients[i].name].rooms[room.name] !== 'undefined') {
                         delete g_people[clients[i].name].rooms[room.name];
-                        client.hset("people", g_people[clients[i].name].name, JSON.stringify(g_people[clients[i].name])); //update user
+                        client.hset("people", clients[i].name, JSON.stringify(g_people[clients[i].name])); //update user
                     }
                 }
                 delete g_chatHistory[room.name]; //clear chat history
@@ -340,17 +340,19 @@ module.exports = function (server, client) {
                 io.emit("delete:room", room.name);
                 socket.emit("update", "You leave room " + room.name + ". Room destroyed.");
             } else {
+                var msg ='';
                 if (room.owner === socket.name) {
-                    delete g_rooms[name].people[socket.name]; // delete from room
+                    delete g_rooms[room.name].people[socket.name]; // delete from room
                     delete g_people[socket.name].owns[room.name]; // clear user owns
                     delete g_people[socket.name].rooms[room.name]; //clear user rooms
-                    g_rooms[name].owner = Object.keys(g_rooms[name].people)[0]; // new owner -> take first
-                    io.sockets.connected[g_people[g_rooms[name].owner].socketID].emit("get:person", g_people[g_rooms[name].owner]); // update new owner's view
-                    var msg = "Owner (" + socket.name + ") leave room. New owner is " + g_rooms[name].owner;
+                    g_rooms[name].owner = Object.keys(g_rooms[room.name].people)[0]; // new owner -> take first
+                    io.sockets.connected[g_people[g_rooms[room.name].owner].socketID].emit("get:person",
+                        g_people[g_rooms[room.name].owner]); // update new owner's view
+                    msg = "Owner (" + socket.name + ") leave room. New owner is " + g_rooms[room.name].owner;
                 } else {
-                    delete g_rooms[name].people[socket.name]; // delete from room
+                    delete g_rooms[room.name].people[socket.name]; // delete from room
                     delete g_people[socket.name].rooms[room.name]; //clear user rooms
-                    var msg = "User (" + socket.name + ") leave room";
+                    msg = "User (" + socket.name + ") leave room";
                 }
                 io.in(room.name).emit("get:msg", {name: BENDER, message: msg, room: room.name});
                 socket.emit("get:room", g_rooms[room.name]);
