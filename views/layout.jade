@@ -2,18 +2,20 @@ doctype html
 html(lang='en' ng-app='benderChat')
     head
         title Bender Chat
+        meta(name=viewport content="width=device-width, initial-scale=1")
         link(rel="shortcut icon" href="/images/favicon.png")
         link(rel='stylesheet' href='components/bootstrap/dist/css/bootstrap.min.css')
         link(rel='stylesheet' href='components/font-awesome/css/font-awesome.min.css')
         link(rel='stylesheet' href='css/flags.css')
         link(rel='stylesheet' href='css/app.css')
+        link(rel='stylesheet' href='css/emoticons.css')
     body
         nav.navbar.navbar-default(role="navigation")
             .container-fluid
                 .navbar-header
-                    a.navbar-brand(href="/") Bender chat
+                    a.mytext.navbar-brand(href="/") Bender chat
                 .navbar-collapse.collapsebar(aria-expanded="false")
-                    ul.nav.navbar-nav
+                    ul.nav.navbar-nav.mytext
                         if(user)
                             li(class=(menu === 'Chat' ? 'active' : ''))
                                 a(href="/") Chat

@@ -8,6 +8,7 @@
         "angular": "latest",
         "angular-bootstrap": "latest",
         "bootstrap": "latest",
+        "emoticons": "latest",
         "Autolinker.js": "latest"
     },
     "directory": "components",
