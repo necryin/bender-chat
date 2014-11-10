@@ -1,15 +1,11 @@
 extends layout
 block content
     .main.col-md-6.col-md-offset-3
-        #login-screen
-            h1.headText Register
-            form#nameForm.form-inline(action="/register",method="post")
-                .form-group
-                    input#name.form-control.input-lg(type="text" name="username" placeholder="Your name")
-                    br
-                    input#pass.form-control.input-lg(type="password" name="password" placeholder="Your password")
-                input#join.btn.btn-primary.btn-lg(type="submit" value="Register")
-                span &nbsp;||&nbsp;
-                a.btn.btn-primary.btn-lg(href="/login") Log in
+        form.form-signin(action="/register",method="post" role="form")
+            h2.form-signin-heading Please register
+            input.form-control(type="text" name="username" minlength=2 placeholder="Your name" required autofocus)
+            input.form-control(type="password" name="password" minlength=3 placeholder="Your password" required)
+            button.btn.btn-lg.btn-primary.btn-block.btn-success(type="submit") Register
+            a.btn.btn-primary.btn-lg.btn-block(href="/register") or Log in
         if (errors[0])
             #errors.alert.alert-danger #{errors}

@@ -1,11 +1,25 @@
+ /* login and register css */
+.form-signin {
+    max-width: 380px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.form-signin-heading {
+    margin-bottom: 10px;
+}
+.form-signin > input {
+    margin-bottom: 10px;
+}
+#errors{
+    margin-top: 10px;
+}
+
+/* chat */
 .conversation {
   font-size: 18px;
   margin: 0;
   height: 300px;
   overflow: auto;
-}
-#errors{
-    margin-top: 10px;
 }
 #send{
     margin: 0 5px 0 5px;
@@ -54,8 +68,9 @@ tab-heading > a {
     word-wrap: break-word;
 }
 .panel-heading {
-    background-color: cornflowerblue!important;
+    background-color: #6495ED!important;
 }
 #whispers {
     max-height: 300px;
 }
+
