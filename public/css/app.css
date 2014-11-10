@@ -4,9 +4,6 @@
   height: 300px;
   overflow: auto;
 }
-#name {
-    margin: 10px;
-}
 #errors{
     margin-top: 10px;
 }
