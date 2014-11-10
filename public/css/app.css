@@ -5,10 +5,10 @@
     margin: 0 auto;
 }
 .form-signin-heading {
-    margin-bottom: 10px;
+    text-align:center
 }
-.form-signin > input {
-    margin-bottom: 10px;
+.mrgb20{
+    margin-bottom: 20px;
 }
 #errors{
     margin-top: 10px;

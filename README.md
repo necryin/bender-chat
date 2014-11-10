@@ -5,6 +5,14 @@ Bender chat
 
 ## work example: http://benderchat-necryin.rhcloud.com/ 
 
+### Features  
+<ul>
+  <li>multiroom</li>
+  <li>whispers</li>
+  <li>emoticons</li>
+  <li>adaptive design</li>
+</ul>
+
 ## Libraries used
 
 ### Server
