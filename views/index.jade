@@ -2,9 +2,9 @@ extends layout
 
 block content
     if (!user)
-        #main-chat-screen.row For logged users only
+        .row For logged users only
     else
-        #main-chat-screen.row(ng-controller="ChatController as chat")
+        .row(ng-controller="ChatController as chat")
             .col-md-3
                 rooms
                 people
@@ -19,14 +19,15 @@ block content
                                 a(ng-click="leaveRoom(room.name)" href='#')
                                     i.glyphicon.glyphicon-remove(ng-if="room.name != DEFAULT_ROOM")
 
-                form#chatForm.form-inline.row
+                form.form-inline.row
                     .form-group.col-xs-8.col-sm-8
                         input#msg.form-control.input-lg(type="text" placeholder="Your message" autofocus)
                     input#send.btn.btn-success.btn-lg.col-xs-3.col-sm-3(type="submit" ng-click="send()" value="Send")
                 #system.bg-danger
             .col-md-3
                 ul#whispers.list-unstyled
+
 block append scripts
-    script(src='js/socket.io.js')
+    script(src='js/socket.io.min.js')
     script(src='js/app.js')
     script(src='components/Autolinker.js/dist/Autolinker.min.js')

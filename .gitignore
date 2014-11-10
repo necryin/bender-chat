@@ -31,3 +31,7 @@ components/
 npm-debug.log
 .openshift
 .idea
+
+public/js/client.js
+bong.bat
+zong.bat
