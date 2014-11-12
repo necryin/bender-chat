@@ -9,5 +9,5 @@ accordion
                     //button.btn.btn-default.btn-xs(ng-click="leaveRoom(room.name)" ng-show="showLeave(room.name)") Leave
                     i.fa.fa-chevron-left.pull-right(ng-show="!nir")
         accordion-heading List of rooms
-            button.createRoomBtn.btn.btn-default.btn-xs(ng-click="createRoom()") Create room
+            button.createRoomBtn.btn.btn-default.btn-xs(ng-click="$event.preventDefault(); $event.stopPropagation(); createRoom();") Create room
             span.badge.pull-right {{roomsCount + 0}}

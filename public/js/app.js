@@ -43,7 +43,6 @@
             delete $scope.userRooms[roomName];
         };
         $scope.clicked = function (roomName) {
-            $interval.cancel($rootScope.tabIntervals[roomName]);
             $("tab-heading[data-id='"+roomName+"']").parents("a").css("background-color", "#fff");
         };
 
@@ -53,14 +52,13 @@
 //        if (typeof user === 'undefined') alert('FATAL ERROR!!!');
 
         $scope.DEFAULT_ROOM = "default";
+        $scope.BENDER = "bender";
         $scope.rooms = {};
         $scope.roomsCount = 0;
         $scope.user = user;
         $scope.userRooms = {};
         $scope.people = {};
         $scope.peopleCount = 0;
-
-        $rootScope.tabIntervals = {};
 
         socket.emit("disconnect");
 
@@ -74,7 +72,7 @@
             var roomName =  $(".tab-pane.active > div").attr('data-id');
             var msg = $("#msg");
             if (msg.val() !== "") {
-                socket.emit("send:msg", {msg: msg.val(), room: roomName});
+                socket.emit("send:msg", {msg: msg.val(), room: roomName, datetime: new Date()});
                 msg.val("");
             }
         };
@@ -116,13 +114,17 @@
             var $conv = $(".conversation[data-id='"+data.room+"']");
             var $tab = $("tab-heading[data-id='"+data.room+"']").parents("a");
             var $to = $conv.find(".msgs");
+            var dateText = '';
+            if (data.hasOwnProperty('datetime')) {
+                var datetime = new Date(data.datetime);
+                var m = datetime.getMinutes() < 10 ? "0"+datetime.getMinutes() : datetime.getMinutes();
+                console.log(m);
+                dateText = "<span data-toggle='tooltip' data-placement='top' title='" + datetime +
+                    "' class='datetime-text'>[" + datetime.getHours() + ":" + m + "]</span>";
+            }
 
-            //TODO clear $interval
-            if (!$tab.parents("li").hasClass('active')) {
+            if (!$tab.parents("li").hasClass('active') && data.name != $scope.BENDER) {
                 $tab.css("background-color", "#449d44");
-                $rootScope.tabIntervals[data.room] = $interval(function(){
-                    $tab.fadeTo(300, 0.5).fadeTo(300, 1.0);
-                }, 1000, 0, false);
             }
 
             try { // silence!!!
@@ -134,18 +136,9 @@
             console.log($to);
             console.log(data.message);
             data.message = $.emoticons.replace(data.message);
-            $to.append("<li class='msg-text bg-warning'><strong><span class='component' onclick='whisper(\"" +
+            $to.append("<li class='msg-text bg-warning'>" + dateText + "<strong><span class='component' onclick='whisper(\"" +
                 data.name  + "\");' class='text-success'>" + data.name + "</span></strong>: " +
                 Autolinker.link(data.message) + "</li>");
-        });
-
-        socket.on('get:history', function (data) {
-            var $to = $(".conversation[data-id='"+data.room+"'] .msgs");
-            console.log($to);
-            console.log(data.history);
-            $.each(data.history, function( index, value ) {
-                $to.append("<li class='msg-text bg-warning'>" + value + "</li>");
-            });
         });
 
         socket.on('get:rooms', function (data) {

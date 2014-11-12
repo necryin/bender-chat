@@ -31,7 +31,8 @@
     margin: 4px;
 }
 .createRoomBtn{
-    margin-left: 25px;
+    margin-left: 35px;
+    width: 120px;
 }
 .device-icon{
     margin: 0 7px 0 7px;
@@ -76,4 +77,9 @@ tab-heading > a {
 
 .mytext {
     font-size: 2em;
+}
+.datetime-text {
+    cursor: pointer;
+    color: #008000;
+    margin-right: 5px;
 }

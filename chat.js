@@ -1,13 +1,11 @@
 module.exports = function (server, client, log) {
 
     var io = require("socket.io").listen(server),
-        Room = require('./room.js'),
         escape = require('escape-html'),
-        logger = require("./logger");
+        logger = require("./logger"),
+        bcrypt = require('bcrypt');
 
-    //TODO Need fixes (delete when fix)
-    client.flushdb();
-
+//    client.flushdb();
 
     // GLOBAL VARS
     var g_people = {};
@@ -17,6 +15,7 @@ module.exports = function (server, client, log) {
     var DEFAULT_ROOM = "default";
     var BENDER = "bender";
     var MAX_MSG_LENGTH = 800;
+
     //when start we get people from redis
     client.hgetall("people", function (err, result) {
         for (key in result) {
@@ -24,7 +23,6 @@ module.exports = function (server, client, log) {
         }
     });
 
-    //TODO save rooms to redis needed
     //when start we get rooms from redis
     client.hgetall("rooms", function (err, result) {
         for (key in result) {
@@ -32,9 +30,22 @@ module.exports = function (server, client, log) {
         }
     });
 
+    //when start we get history from redis
+    client.hgetall("history", function (err, result) {
+        for (key in result) {
+            g_chatHistory[key] = JSON.parse(result[key]);
+        }
+    });
+
     //create default room
-    var room = new Room(DEFAULT_ROOM, BENDER, null);
-    g_rooms[room.name] = room;
+    var droom = {
+        name: DEFAULT_ROOM,
+        owner: BENDER,
+        people: {},
+        private: false,
+        password: null
+    };
+    g_rooms[droom.name] = droom;
 
     //create bender!!!
     g_people[BENDER] = {
@@ -117,12 +128,17 @@ module.exports = function (server, client, log) {
             //join in saved rooms
             var msg = socket.name + " has connected.";
             socket.emit("get:rooms", g_rooms);
-            for (room in g_people[name].rooms) {
-                socket.join(room);
-                g_rooms[room].people[socket.name] = true;
-                io.in(room).emit("get:msg", {name: BENDER, message: msg, room: room});
-                socket.emit("get:history", {history: g_chatHistory[room], room: room});
-                socket.emit("update", "Welcome to room [" + room + "].");
+            for (roomName in g_people[name].rooms) {
+                socket.join(roomName);
+                g_rooms[roomName].people[socket.name] = true;
+                client.hset("rooms", roomName, JSON.stringify(g_rooms[roomName]));
+                io.in(roomName).emit("get:msg", {name: BENDER, message: msg, room: roomName});
+                for (var i=-1; i < g_chatHistory[roomName].length; ++i) {
+                    if(typeof g_chatHistory[roomName][i] !== 'undefined'){
+                        socket.emit("get:msg", g_chatHistory[roomName][i]);
+                    }
+                }
+                socket.emit("update", "Welcome to room [" + roomName + "].");
             }
 
             logger.log("connected " + socket.name);
@@ -152,20 +168,19 @@ module.exports = function (server, client, log) {
             }
         });
 
-        //TODO add datetime to messages
+        //TODO add msg entity
         socket.on("send:msg", function (data) {
-
-            if (!data.hasOwnProperty('msg') || !data.hasOwnProperty('room')) {
+            if (!data.hasOwnProperty('msg') || !data.hasOwnProperty('room') || !data.hasOwnProperty('datetime')) {
                 logger.log(" INVALID DATA send:msg from <" + socket.name + ">");
                 return;
             }
-
             if (data.msg.length > MAX_MSG_LENGTH) {
                 logger.log(" SO BIG DATA send:msg from <" + socket.name + ">");
                 data.msg = data.msg.substr(0, MAX_MSG_LENGTH);
             }
             var msg = escape(data.msg);
             var roomName = data.room;
+            var datetime = new Date(data.datetime).toUTCString();
 
             var re = /^[w]:.*:/;
             var whisper = re.test(msg);
@@ -188,15 +203,18 @@ module.exports = function (server, client, log) {
                 }
             } else {
                 logger.log(socket.name + " in room " + roomName + " say: " + msg);
-                io.in(roomName).emit("get:msg", {name: socket.name, message: msg, room: roomName});
+
+                var msgEntity = {name: socket.name, message: msg, room: roomName, datetime: datetime};
+                io.in(roomName).emit("get:msg", msgEntity);
 //                socket.emit("isTyping", false);
 
                 //no more then HISTORY_LENGTH
                 if (Object.keys(g_rooms[roomName].people).length > HISTORY_LENGTH) {
                     g_chatHistory[roomName].splice(0, 1);
                 } else {
-                    g_chatHistory[roomName].push(socket.name + ": " + msg);
+                    g_chatHistory[roomName].push(msgEntity);
                 }
+                client.hset("history", roomName, JSON.stringify( g_chatHistory[roomName] )); //update room
             }
         });
 
@@ -233,7 +251,15 @@ module.exports = function (server, client, log) {
                     socket.emit("update", "Invalid room name");
                     return;
                 }
-                var room = new Room(name, socket.name, password);
+                var hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+                var room = {
+                    name: name,
+                    owner: socket.name,
+                    people: {},
+                    private: password ? true : false,
+                    password: hash || null
+                };
+
                 room.people[socket.name] = true;
                 g_rooms[room.name] = room;
 
@@ -247,7 +273,7 @@ module.exports = function (server, client, log) {
                 g_people[socket.name].rooms[room.name] = true;
 
                 client.hset("people", socket.name, JSON.stringify(g_people[socket.name])); //update user
-
+                client.hset("rooms", room.name, JSON.stringify( g_rooms[room.name])); //update room
                 socket.emit("get:person", g_people[socket.name]);
                 socket.emit("update", "Room " + room.name + " created.");
                 g_chatHistory[room.name] = [];
@@ -281,7 +307,7 @@ module.exports = function (server, client, log) {
                     }
                 }
                 delete g_chatHistory[room.name]; //clear chat history
-
+                client.hdel("rooms", room.name);
                 io.emit("get:room", room);
             } else {
                 socket.emit("update", "Only the owner can remove a room.");
@@ -305,7 +331,7 @@ module.exports = function (server, client, log) {
 
             logger.log(socket.name + " join:room " + roomName);
             if (room.private) {
-                if (!roomPass || roomPass !== room.getPassword()) {
+                if (!roomPass || !bcrypt.compareSync(roomPass, room.password)) {
                     socket.emit("update", "Wrong password!");
                     return;
                 }
@@ -317,12 +343,16 @@ module.exports = function (server, client, log) {
 
             io.in(room.name).emit("update", socket.name + " has connected.");
             client.hset("people", socket.name, JSON.stringify(g_people[socket.name])); //update user
+            client.hset("rooms", room.name, JSON.stringify( g_rooms[room.name]));
 
             socket.emit("update", "Welcome to room [" + room.name + "].");
             socket.emit("get:room", room);
 
-            socket.emit("get:history", {history: g_chatHistory[room.name], room: room.name});
-
+            for (var i=-1; i < g_chatHistory[room.name].length; ++i) {
+                if(typeof g_chatHistory[room.name][i] !== 'undefined'){
+                    socket.emit("get:msg", g_chatHistory[room.name][i]);
+                }
+            }
         });
 
         socket.on("leave:room", function (roomName) {
@@ -339,6 +369,7 @@ module.exports = function (server, client, log) {
             if (Object.keys(room.people).length <= 1) {
                 logger.log(socket.name + " leave:room " + roomName + " and room deleted");
                 delete g_rooms[room.name];
+                client.hdel("rooms", room.name);
 
                 // check against errors
                 if (g_people[socket.name].owns.hasOwnProperty(room.name)) {
@@ -368,6 +399,7 @@ module.exports = function (server, client, log) {
                 socket.emit("update", "You leave room [" + room.name + "].");
             }
             client.hset("people", socket.name, JSON.stringify(g_people[socket.name])); //update user
+            client.hset("rooms", room.name, JSON.stringify( g_rooms[room.name]));
         });
     });
 };

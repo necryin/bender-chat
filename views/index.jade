@@ -2,9 +2,9 @@ extends layout
 
 block content
     if (!user)
-        .row For logged users only
+        #main-chat-screen.row For logged users only
     else
-        .row(ng-controller="ChatController as chat")
+        #main-chat-screen.row(ng-controller="ChatController as chat")
             .col-md-3
                 rooms
                 people

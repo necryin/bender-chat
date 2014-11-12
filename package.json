@@ -1,6 +1,6 @@
 {
     "name": "bender-chat",
-    "version": "0.1.0",
+    "version": "0.3.0",
     "description": "node.js/socket.io/angular chat app",
     "main": "server.js",
     "dependencies": {
@@ -15,7 +15,8 @@
         "connect-flash": "*",
         "passport-local": "*",
         "passport-local-mongoose": "*",
-        "escape-html": "*"
+        "escape-html": "*",
+        "bcrypt": ">= 0.8.x"
     },
     "devDependencies": {},
     "scripts": {
