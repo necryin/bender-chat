@@ -399,9 +399,10 @@ module.exports = function (server, client, log) {
                 io.in(room.name).emit("get:msg", {name: BENDER, message: msg, room: room.name});
                 socket.emit("get:room", room);
                 socket.emit("update", "You leave room [" + room.name + "].");
+                client.hset("rooms", room.name, JSON.stringify( g_rooms[room.name]));
             }
             client.hset("people", socket.name, JSON.stringify(g_people[socket.name])); //update user
-            client.hset("rooms", room.name, JSON.stringify( g_rooms[room.name]));
+
         });
     });
 };
