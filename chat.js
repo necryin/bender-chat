@@ -133,9 +133,11 @@ module.exports = function (server, client, log) {
                 g_rooms[roomName].people[socket.name] = true;
                 client.hset("rooms", roomName, JSON.stringify(g_rooms[roomName]));
                 io.in(roomName).emit("get:msg", {name: BENDER, message: msg, room: roomName});
-                for (var i=-1; i < g_chatHistory[roomName].length; ++i) {
-                    if(typeof g_chatHistory[roomName][i] !== 'undefined'){
-                        socket.emit("get:msg", g_chatHistory[roomName][i]);
+                if (g_chatHistory.hasOwnProperty(roomName)) {
+                    for (var i=-1; i < g_chatHistory[roomName].length; ++i) {
+                        if(typeof g_chatHistory[roomName][i] !== 'undefined'){
+                            socket.emit("get:msg", g_chatHistory[roomName][i]);
+                        }
                     }
                 }
                 socket.emit("update", "Welcome to room [" + roomName + "].");

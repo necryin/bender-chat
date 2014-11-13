@@ -1,4 +1,9 @@
 extends layout
+block append head
+    link(rel='stylesheet' href='components/font-awesome/css/font-awesome.min.css')
+    link(rel='stylesheet' href='css/flags.css')
+    link(rel='stylesheet' href='css/app.css')
+    link(rel='stylesheet' href='css/emoticons.css')
 
 block content
     if (!user)
@@ -32,5 +37,3 @@ block append scripts
     script(src='components/emoticons/lib/emoticons.js')
     script(src='components/Autolinker.js/dist/Autolinker.min.js')
     script(src='js/app.js')
-
-
