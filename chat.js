@@ -122,6 +122,10 @@ module.exports = function (server, client, log) {
                 person.rooms[DEFAULT_ROOM] = true;
                 client.hset("people", name, JSON.stringify(person));
                 g_people[name] = person;
+            } else {
+                delete g_people[socket.name].status;
+                io.emit("delete:person", g_people[socket.name]); // update people view
+                socket.emit("disconnect");
             }
 
             socket.emit("update", "You have connected to the server.");
@@ -402,7 +406,6 @@ module.exports = function (server, client, log) {
                 client.hset("rooms", room.name, JSON.stringify( g_rooms[room.name]));
             }
             client.hset("people", socket.name, JSON.stringify(g_people[socket.name])); //update user
-
         });
     });
 };
